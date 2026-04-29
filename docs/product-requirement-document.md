@@ -90,6 +90,7 @@ Rules:
 * Fixed pricing
 * No negotiation
 * Auto-computed by system
+* Can be customized using the `admin/pricing` route.
 
 ---
 
