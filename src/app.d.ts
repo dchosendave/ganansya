@@ -3,8 +3,14 @@
 declare global {
 	namespace App {
 		// interface Error {}
-		// interface Locals {}
-		// interface PageData {}
+		interface Locals {
+			user: import('$lib/auth/types').CurrentUser | null;
+			authState: 'missing' | 'valid' | 'expired' | 'invalid';
+		}
+		interface PageData {
+			currentUser: import('$lib/auth/types').CurrentUser | null;
+			flashMessage: import('$lib/auth/types').FlashMessage | null;
+		}
 		// interface PageState {}
 		// interface Platform {}
 	}

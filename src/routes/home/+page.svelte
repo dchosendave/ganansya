@@ -1,4 +1,9 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+	import type { PageProps } from './$types';
+
+	import type { AuthApiResponse } from '$lib/auth/types';
+	import { getHomeModulesForRole } from '$lib/auth/modules';
 	import { Button } from '$lib/components/ui/button/index.js';
 
 	type BalanceItem = {
@@ -9,7 +14,8 @@
 	const dashboard = {
 		dayLabel: 'Monday, 8:40 AM',
 		statusTitle: 'Low GCash, limit muna ang Cash In',
-		statusMessage: 'Pwede pa ang Cash Out. Mag-rebalance muna bago tumanggap ng mas malaking Cash In.',
+		statusMessage:
+			'Pwede pa ang Cash Out. Mag-rebalance muna bago tumanggap ng mas malaking Cash In.',
 		updatedAt: '2:14 PM',
 		cash: 'PHP 8,420',
 		gcash: 'PHP 2,680',
@@ -28,9 +34,45 @@
 		{ label: 'Kita Today', value: dashboard.kitaToday }
 	];
 
+	let { data }: PageProps = $props();
 	const primaryStatusTone = dashboard.gcashBelowThreshold || dashboard.cashBelowThreshold;
 	const cashInDisabled = dashboard.gcashBelowThreshold;
 	const cashOutDisabled = dashboard.cashBelowThreshold;
+	let isLoggingOut = $state(false);
+	let logoutErrorMessage = $state('');
+	let homeModules = $derived(data.currentUser ? getHomeModulesForRole(data.currentUser.role) : []);
+	let roleLabel = $derived(data.currentUser?.role === 'owner' ? 'Owner access' : 'Operator access');
+
+	async function handleLogout() {
+		logoutErrorMessage = '';
+		isLoggingOut = true;
+
+		try {
+			const response = await fetch('/api/auth/logout', {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json'
+				}
+			});
+			const result = (await response.json()) as AuthApiResponse;
+
+			if (response.ok && result.ok) {
+				await goto(result.redirectTo);
+				return;
+			}
+
+			if (!result.ok) {
+				logoutErrorMessage = result.message;
+				return;
+			}
+
+			logoutErrorMessage = 'Hindi ma-log out ngayon. Subukan ulit.';
+		} catch {
+			logoutErrorMessage = 'Hindi ma-log out ngayon. Subukan ulit.';
+		} finally {
+			isLoggingOut = false;
+		}
+	}
 </script>
 
 <svelte:head>
@@ -43,13 +85,41 @@
 
 <main class="min-h-svh bg-background px-4 py-5 text-foreground sm:px-6 sm:py-8">
 	<section class="mx-auto flex w-full max-w-sm flex-col gap-4">
-		<header class="space-y-2">
-			<p class="text-sm font-medium text-muted-foreground">{dashboard.dayLabel}</p>
+		<header class="space-y-3">
+			<div class="flex items-start justify-between gap-3">
+				<div class="space-y-2">
+					<p class="text-sm font-medium text-muted-foreground">{dashboard.dayLabel}</p>
+					<p class="text-sm font-semibold text-muted-foreground">
+						Hi, {data.currentUser?.displayName}. <span class="ml-1">{roleLabel}</span>
+					</p>
+				</div>
+
+				<Button
+					type="button"
+					variant="outline"
+					size="sm"
+					class="h-10 bg-card"
+					disabled={isLoggingOut}
+					onclick={handleLogout}
+				>
+					{isLoggingOut ? 'Logging out...' : 'Logout'}
+				</Button>
+			</div>
+
 			<h1 class="text-3xl leading-tight font-semibold tracking-normal">Ready ang tindahan</h1>
 			<p class="max-w-[28ch] text-sm leading-5 text-muted-foreground">
 				Silipin ang float, pili ng transaction, tapos tuloy agad sa customer.
 			</p>
 		</header>
+
+		{#if logoutErrorMessage}
+			<p
+				class="rounded-2xl border border-destructive/15 bg-destructive/8 px-3.5 py-3 text-sm leading-5 font-medium text-destructive"
+				role="alert"
+			>
+				{logoutErrorMessage}
+			</p>
+		{/if}
 
 		<section class="rounded-[2rem] border border-border/80 bg-card px-4 py-4 shadow-sm">
 			<div class="flex items-start justify-between gap-3">
@@ -60,9 +130,7 @@
 				<p
 					class={[
 						'rounded-full px-3 py-1 text-[0.72rem] font-semibold',
-						primaryStatusTone
-							? 'bg-destructive/10 text-destructive'
-							: 'bg-muted text-foreground'
+						primaryStatusTone ? 'bg-destructive/10 text-destructive' : 'bg-muted text-foreground'
 					]}
 				>
 					{primaryStatusTone ? 'Watch buffer' : 'All good'}
@@ -77,7 +145,9 @@
 				<div class="grid grid-cols-3 gap-2">
 					{#each balances as balance (balance.label)}
 						<div class="rounded-2xl bg-muted/35 px-3 py-3">
-							<p class="text-[0.72rem] font-semibold uppercase tracking-[0.04em] text-muted-foreground">
+							<p
+								class="text-[0.72rem] font-semibold tracking-[0.04em] text-muted-foreground uppercase"
+							>
 								{balance.label}
 							</p>
 							<p class="mt-2 text-base leading-5 font-semibold">{balance.value}</p>
@@ -85,7 +155,9 @@
 					{/each}
 				</div>
 
-				<div class="mt-3 flex items-center justify-between gap-3 text-xs font-medium text-muted-foreground">
+				<div
+					class="mt-3 flex items-center justify-between gap-3 text-xs font-medium text-muted-foreground"
+				>
 					<p>{dashboard.transactionsToday} logs today</p>
 					<p>{dashboard.totalFeesToday} fees</p>
 					<p>Updated {dashboard.updatedAt}</p>
@@ -110,24 +182,45 @@
 			</div>
 
 			<div class="mt-4 border-t border-border/80 pt-4">
-				<p class="text-xs font-semibold uppercase tracking-[0.04em] text-muted-foreground">
+				<p class="text-xs font-semibold tracking-[0.04em] text-muted-foreground uppercase">
 					Last log
 				</p>
 				<p class="mt-1 text-sm leading-5 font-medium">{dashboard.lastLog}</p>
 			</div>
 		</section>
 
-		<nav class="grid grid-cols-3 gap-2" aria-label="Quick actions">
-			<Button type="button" variant="outline" size="sm" class="h-11 bg-card">Logs</Button>
-			<Button
-				href="/reconciliation"
-				variant={dashboard.needsReconciliation ? 'default' : 'outline'}
-				size="sm"
-				class="h-11"
-			>
-				Reconcile
-			</Button>
-			<Button type="button" variant="outline" size="sm" class="h-11 bg-card">More</Button>
-		</nav>
+		<section class="space-y-3" aria-labelledby="home-modules-title">
+			<div class="space-y-1">
+				<p class="text-xs font-semibold tracking-[0.04em] text-muted-foreground uppercase">
+					Quick access
+				</p>
+				<h2 id="home-modules-title" class="text-lg leading-6 font-semibold">
+					Mga module mo ngayon
+				</h2>
+			</div>
+
+			<div class="grid gap-3">
+				{#each homeModules as module (module.id)}
+					<a
+						href={module.href}
+						class="rounded-[1.6rem] border border-border/80 bg-card px-4 py-4 shadow-sm transition-transform hover:-translate-y-0.5"
+					>
+						<div class="flex items-start justify-between gap-3">
+							<div class="space-y-2">
+								<h3 class="text-base font-semibold">{module.label}</h3>
+								<p class="max-w-[28ch] text-sm leading-5 text-muted-foreground">
+									{module.description}
+								</p>
+							</div>
+							<span
+								class="rounded-full bg-muted px-2.5 py-1 text-[0.72rem] font-semibold text-muted-foreground"
+							>
+								Open
+							</span>
+						</div>
+					</a>
+				{/each}
+			</div>
+		</section>
 	</section>
 </main>

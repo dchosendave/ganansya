@@ -1,12 +1,51 @@
 <script lang="ts">
+	import { goto } from '$app/navigation';
+
+	import type { AuthApiResponse, LoginFieldErrors } from '$lib/auth/types';
 	import LoginForm, { type LoginPayload } from '$lib/components/auth/LoginForm.svelte';
 
 	const quickChecks = ['Cash', 'GCash', 'Kita'];
 
-	let notice = $state('');
+	let isLoading = $state(false);
+	let serverMessage = $state('');
+	let serverFieldErrors = $state<LoginFieldErrors | null>(null);
 
-	function handleLogin(payload: LoginPayload) {
-		notice = `Login ready for ${payload.mobileNumber}`;
+	function clearServerErrors() {
+		serverMessage = '';
+		serverFieldErrors = null;
+	}
+
+	async function handleLogin(payload: LoginPayload) {
+		clearServerErrors();
+		isLoading = true;
+
+		try {
+			const response = await fetch('/api/auth/login', {
+				method: 'POST',
+				headers: {
+					'content-type': 'application/json'
+				},
+				body: JSON.stringify(payload)
+			});
+			const result = (await response.json()) as AuthApiResponse;
+
+			if (response.ok && result.ok) {
+				await goto(result.redirectTo);
+				return;
+			}
+
+			if (!result.ok) {
+				serverMessage = result.message;
+				serverFieldErrors = result.fieldErrors ?? null;
+				return;
+			}
+
+			serverMessage = 'Hindi ma-process ang login ngayon. Subukan ulit.';
+		} catch {
+			serverMessage = 'Hindi ma-process ang login ngayon. Subukan ulit.';
+		} finally {
+			isLoading = false;
+		}
 	}
 </script>
 
@@ -48,15 +87,12 @@
 			{/each}
 		</ul>
 
-		<LoginForm onSubmit={handleLogin} />
-
-		{#if notice}
-			<p
-				class="rounded-xl border bg-muted/40 px-3 py-2.5 text-center text-sm font-medium text-muted-foreground"
-				role="status"
-			>
-				{notice}
-			</p>
-		{/if}
+		<LoginForm
+			onSubmit={handleLogin}
+			onInput={clearServerErrors}
+			{isLoading}
+			{serverMessage}
+			{serverFieldErrors}
+		/>
 	</section>
 </main>

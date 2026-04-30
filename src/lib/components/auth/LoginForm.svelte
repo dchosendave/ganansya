@@ -1,23 +1,42 @@
 <script lang="ts" module>
+	import type { LoginFieldErrors } from '$lib/auth/types';
+
 	export type LoginPayload = {
 		mobileNumber: string;
 		pin: string;
+	};
+
+	export type LoginFormProps = {
+		onSubmit?: (payload: LoginPayload) => void | Promise<void>;
+		onInput?: () => void;
+		isLoading?: boolean;
+		serverMessage?: string;
+		serverFieldErrors?: LoginFieldErrors | null;
 	};
 </script>
 
 <script lang="ts">
 	import { tick } from 'svelte';
+	import {
+		LOGIN_MOBILE_INPUT_MAX_LENGTH,
+		LOGIN_PIN_LENGTH,
+		isPinFormatValid,
+		normalizeMobileNumberToE164,
+		sanitizeMobileNumberInput,
+		sanitizePinInput
+	} from '$lib/auth/credentials';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
 	import { Input } from '$lib/components/ui/input/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 
-	type Props = {
-		onSubmit?: (payload: LoginPayload) => void;
-		isLoading?: boolean;
-	};
-
-	let { onSubmit, isLoading = false }: Props = $props();
+	let {
+		onSubmit,
+		onInput,
+		isLoading = false,
+		serverMessage = '',
+		serverFieldErrors = null
+	}: LoginFormProps = $props();
 
 	const fieldId = $props.id();
 	const mobileId = `${fieldId}-mobile`;
@@ -26,19 +45,17 @@
 	const helperId = `${fieldId}-helper`;
 	const mobileHelpId = `${fieldId}-mobile-help`;
 	const pinHelpId = `${fieldId}-pin-help`;
-	const maxPinLength = 6;
-	const maxMobileNumberLength = 12;
-	const pinSlots = Array.from({ length: maxPinLength }, (_, index) => index);
+	const pinSlots = Array.from({ length: LOGIN_PIN_LENGTH }, (_, index) => index);
 
 	let mobileNumber = $state('');
 	let pin = $state('');
-	let errorMessage = $state('');
+	let clientErrorMessage = $state('');
 	let mobileInput = $state<HTMLInputElement | null>(null);
 	let pinInput = $state<HTMLInputElement | null>(null);
 
-	let normalizedMobile = $derived(mobileNumber.replace(/\D/g, ''));
-	let isMobileValid = $derived(/^(09\d{9}|639\d{9})$/.test(normalizedMobile));
-	let isPinComplete = $derived(/^\d{6}$/.test(pin));
+	let normalizedMobileNumber = $derived(normalizeMobileNumberToE164(mobileNumber));
+	let isMobileValid = $derived(Boolean(normalizedMobileNumber));
+	let isPinComplete = $derived(isPinFormatValid(pin));
 	let canSubmit = $derived(isMobileValid && isPinComplete);
 	let helperText = $derived(getHelperText());
 	let statusToneClass = $derived(
@@ -47,38 +64,46 @@
 			: 'border-border/80 bg-muted/35 text-muted-foreground'
 	);
 	let pinCountToneClass = $derived(
-		pin.length === maxPinLength ? 'text-foreground' : 'text-muted-foreground'
+		pin.length === LOGIN_PIN_LENGTH ? 'text-foreground' : 'text-muted-foreground'
 	);
-	let pinDotToneClass = $derived(
-		pin.length > 0 ? 'text-primary/80' : 'text-muted-foreground/40'
-	);
+	let pinDotToneClass = $derived(pin.length > 0 ? 'text-primary/80' : 'text-muted-foreground/40');
+	let activeErrorMessage = $derived(clientErrorMessage || serverMessage);
+	let mobileFieldError = $derived(serverFieldErrors?.mobileNumber ?? '');
+	let pinFieldError = $derived(serverFieldErrors?.pin ?? '');
 
 	function setMobileNumber(value: string) {
-		mobileNumber = value.replace(/\D/g, '').slice(0, maxMobileNumberLength);
+		mobileNumber = sanitizeMobileNumberInput(value);
+		clientErrorMessage = '';
+		onInput?.();
 	}
 
 	function setPin(value: string) {
-		pin = value.replace(/\D/g, '').slice(0, maxPinLength);
+		pin = sanitizePinInput(value);
+		clientErrorMessage = '';
+		onInput?.();
 	}
 
-	function handleSubmit(event: SubmitEvent) {
+	async function handleSubmit(event: SubmitEvent) {
 		event.preventDefault();
 
 		if (!canSubmit) {
-			errorMessage = !isMobileValid
+			clientErrorMessage = !isMobileValid
 				? 'I-check ang mobile number. Gamitin ang 09XXXXXXXXX o 639XXXXXXXXX.'
 				: 'Ilagay ang buong 6-digit PIN.';
 			focusFirstInvalidField();
 			return;
 		}
 
-		errorMessage = '';
-		onSubmit?.({
-			mobileNumber: normalizedMobile.startsWith('09')
-				? `+63${normalizedMobile.slice(1)}`
-				: `+${normalizedMobile}`,
-			pin
-		});
+		clientErrorMessage = '';
+
+		try {
+			await onSubmit?.({
+				mobileNumber: normalizedMobileNumber!,
+				pin
+			});
+		} catch {
+			clientErrorMessage = 'Hindi ma-process ang login ngayon. Subukan ulit.';
+		}
 	}
 
 	async function focusFirstInvalidField() {
@@ -102,7 +127,7 @@
 		}
 
 		if (!isPinComplete) {
-			return `Kulang pa ng ${maxPinLength - pin.length} digit sa PIN.`;
+			return `Kulang pa ng ${LOGIN_PIN_LENGTH - pin.length} digit sa PIN.`;
 		}
 
 		return 'Ayos. Pwede nang pumasok.';
@@ -133,7 +158,9 @@
 			<div class="grid gap-2.5">
 				<div class="flex items-center justify-between gap-3">
 					<Label for={mobileId}>Mobile number</Label>
-					<span class="rounded-full bg-muted px-2.5 py-1 text-[0.72rem] font-semibold text-muted-foreground">
+					<span
+						class="rounded-full bg-muted px-2.5 py-1 text-[0.72rem] font-semibold text-muted-foreground"
+					>
 						09 or 639
 					</span>
 				</div>
@@ -147,17 +174,23 @@
 					inputmode="numeric"
 					autocomplete="tel-national"
 					enterkeyhint="next"
-					maxlength={maxMobileNumberLength}
+					maxlength={LOGIN_MOBILE_INPUT_MAX_LENGTH}
 					spellcheck={false}
 					placeholder="09XXXXXXXXX"
-					aria-describedby={errorMessage
+					aria-describedby={activeErrorMessage || mobileFieldError
 						? `${mobileHelpId} ${helperId} ${errorId}`
 						: `${mobileHelpId} ${helperId}`}
-					aria-invalid={errorMessage && !isMobileValid ? 'true' : undefined}
+					aria-invalid={(!isMobileValid && clientErrorMessage) || mobileFieldError
+						? 'true'
+						: undefined}
 					class="h-12 border-border/90 bg-muted/20 px-4 text-base shadow-none placeholder:text-muted-foreground/80"
 					bind:value={() => mobileNumber, setMobileNumber}
 					bind:ref={mobileInput}
 				/>
+
+				{#if mobileFieldError}
+					<p class="text-sm font-medium text-destructive">{mobileFieldError}</p>
+				{/if}
 			</div>
 
 			<div class="grid gap-3.5">
@@ -170,7 +203,7 @@
 								pinCountToneClass
 							]}
 						>
-							{pin.length}/{maxPinLength}
+							{pin.length}/{LOGIN_PIN_LENGTH}
 						</span>
 					</div>
 					<p id={pinHelpId} class="text-sm leading-5 text-muted-foreground">
@@ -184,16 +217,22 @@
 						autocomplete="current-password"
 						pattern="[0-9]*"
 						enterkeyhint="go"
-						maxlength={maxPinLength}
-						aria-describedby={errorMessage
+						maxlength={LOGIN_PIN_LENGTH}
+						aria-describedby={activeErrorMessage || pinFieldError
 							? `${pinHelpId} ${helperId} ${errorId}`
 							: `${pinHelpId} ${helperId}`}
-						aria-invalid={errorMessage && isMobileValid && !isPinComplete ? 'true' : undefined}
+						aria-invalid={(!isPinComplete && clientErrorMessage) || pinFieldError
+							? 'true'
+							: undefined}
 						class="h-12 border-border/90 bg-muted/20 px-4 text-center text-base font-semibold tracking-[0.4em] shadow-none"
 						bind:value={() => pin, setPin}
 						bind:ref={pinInput}
 					/>
 				</div>
+
+				{#if pinFieldError}
+					<p class="text-sm font-medium text-destructive">{pinFieldError}</p>
+				{/if}
 
 				<div class="grid grid-cols-6 gap-2" aria-hidden="true">
 					{#each pinSlots as index (index)}
@@ -211,13 +250,13 @@
 				</div>
 			</div>
 
-			{#if errorMessage}
+			{#if activeErrorMessage}
 				<p
 					id={errorId}
-					class="rounded-2xl border border-destructive/15 bg-destructive/8 px-3.5 py-3 text-sm font-medium leading-5 text-destructive"
+					class="rounded-2xl border border-destructive/15 bg-destructive/8 px-3.5 py-3 text-sm leading-5 font-medium text-destructive"
 					role="alert"
 				>
-					{errorMessage}
+					{activeErrorMessage}
 				</p>
 			{/if}
 

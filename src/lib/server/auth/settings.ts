@@ -1,0 +1,9 @@
+export const AUTH_COOKIE_NAME = 'ganansya_auth';
+export const FLASH_COOKIE_NAME = 'ganansya_flash';
+export const AUTH_COOKIE_MAX_AGE_SECONDS = 60 * 60 * 12;
+export const FLASH_COOKIE_MAX_AGE_SECONDS = 60;
+export const LOGIN_LOCK_WINDOW_MINUTES = 15;
+export const LOGIN_LOCK_MAX_ATTEMPTS = 5;
+export const IP_ATTEMPT_WINDOW_MINUTES = 15;
+export const IP_ATTEMPT_MAX = 20;
+export const IP_AND_MOBILE_ATTEMPT_MAX = 10;
