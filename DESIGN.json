@@ -1,0 +1,299 @@
+{
+	"schemaVersion": 2,
+	"generatedAt": "2026-04-30T00:00:00+08:00",
+	"title": "Design System: Ganansya",
+	"extensions": {
+		"colorMeta": {
+			"paper": {
+				"role": "neutral",
+				"displayName": "Ledger Paper",
+				"canonical": "oklch(1 0 0)",
+				"tonalRamp": [
+					"oklch(0.15 0.004 95)",
+					"oklch(0.25 0.004 95)",
+					"oklch(0.38 0.004 95)",
+					"oklch(0.52 0.004 95)",
+					"oklch(0.66 0.004 95)",
+					"oklch(0.78 0.004 95)",
+					"oklch(0.9 0.004 95)",
+					"oklch(0.98 0.004 95)"
+				]
+			},
+			"ink": {
+				"role": "neutral",
+				"displayName": "Ledger Ink",
+				"canonical": "oklch(0.145 0 0)",
+				"tonalRamp": [
+					"oklch(0.145 0.003 95)",
+					"oklch(0.24 0.003 95)",
+					"oklch(0.36 0.003 95)",
+					"oklch(0.48 0.003 95)",
+					"oklch(0.62 0.003 95)",
+					"oklch(0.74 0.003 95)",
+					"oklch(0.86 0.003 95)",
+					"oklch(0.96 0.003 95)"
+				]
+			},
+			"action-ink": {
+				"role": "primary",
+				"displayName": "Action Ink",
+				"canonical": "oklch(0.205 0 0)",
+				"tonalRamp": [
+					"oklch(0.16 0.004 95)",
+					"oklch(0.205 0.004 95)",
+					"oklch(0.32 0.004 95)",
+					"oklch(0.45 0.004 95)",
+					"oklch(0.58 0.004 95)",
+					"oklch(0.7 0.004 95)",
+					"oklch(0.84 0.004 95)",
+					"oklch(0.95 0.004 95)"
+				]
+			},
+			"quiet-paper": {
+				"role": "neutral",
+				"displayName": "Quiet Paper",
+				"canonical": "oklch(0.97 0 0)",
+				"tonalRamp": [
+					"oklch(0.18 0.003 95)",
+					"oklch(0.29 0.003 95)",
+					"oklch(0.42 0.003 95)",
+					"oklch(0.55 0.003 95)",
+					"oklch(0.68 0.003 95)",
+					"oklch(0.8 0.003 95)",
+					"oklch(0.9 0.003 95)",
+					"oklch(0.97 0.003 95)"
+				]
+			},
+			"quiet-ink": {
+				"role": "neutral",
+				"displayName": "Quiet Ink",
+				"canonical": "oklch(0.556 0 0)",
+				"tonalRamp": [
+					"oklch(0.18 0.003 95)",
+					"oklch(0.28 0.003 95)",
+					"oklch(0.4 0.003 95)",
+					"oklch(0.556 0.003 95)",
+					"oklch(0.66 0.003 95)",
+					"oklch(0.78 0.003 95)",
+					"oklch(0.88 0.003 95)",
+					"oklch(0.95 0.003 95)"
+				]
+			},
+			"line": {
+				"role": "neutral",
+				"displayName": "Ledger Line",
+				"canonical": "oklch(0.922 0 0)",
+				"tonalRamp": [
+					"oklch(0.16 0.003 95)",
+					"oklch(0.28 0.003 95)",
+					"oklch(0.4 0.003 95)",
+					"oklch(0.54 0.003 95)",
+					"oklch(0.68 0.003 95)",
+					"oklch(0.8 0.003 95)",
+					"oklch(0.88 0.003 95)",
+					"oklch(0.922 0.003 95)"
+				]
+			},
+			"focus-ring": {
+				"role": "primary",
+				"displayName": "Focus Ring",
+				"canonical": "oklch(0.708 0 0)",
+				"tonalRamp": [
+					"oklch(0.18 0.004 95)",
+					"oklch(0.3 0.004 95)",
+					"oklch(0.42 0.004 95)",
+					"oklch(0.55 0.004 95)",
+					"oklch(0.708 0.004 95)",
+					"oklch(0.8 0.004 95)",
+					"oklch(0.9 0.004 95)",
+					"oklch(0.96 0.004 95)"
+				]
+			},
+			"danger": {
+				"role": "tertiary",
+				"displayName": "Risk Red",
+				"canonical": "oklch(0.577 0.245 27.325)",
+				"tonalRamp": [
+					"oklch(0.18 0.055 27.325)",
+					"oklch(0.28 0.12 27.325)",
+					"oklch(0.4 0.19 27.325)",
+					"oklch(0.577 0.245 27.325)",
+					"oklch(0.68 0.18 27.325)",
+					"oklch(0.78 0.12 27.325)",
+					"oklch(0.88 0.07 27.325)",
+					"oklch(0.95 0.025 27.325)"
+				]
+			}
+		},
+		"typographyMeta": {
+			"display": {
+				"displayName": "Display",
+				"purpose": "Login and main screen titles only."
+			},
+			"headline": {
+				"displayName": "Headline",
+				"purpose": "Form titles and prominent section labels."
+			},
+			"title": {
+				"displayName": "Title",
+				"purpose": "Card headings, compact panels, and grouped controls."
+			},
+			"body": {
+				"displayName": "Body",
+				"purpose": "Form values, helper text, and readable operational copy."
+			},
+			"label": {
+				"displayName": "Label",
+				"purpose": "Field labels, buttons, tabs, and compact actions."
+			}
+		},
+		"shadows": [
+			{
+				"name": "surface-low",
+				"value": "0 1px 2px 0 oklch(0.145 0.003 95 / 0.05)",
+				"purpose": "Subtle lift on single current-task surfaces."
+			},
+			{
+				"name": "overlay-high",
+				"value": "0 25px 50px -12px oklch(0.145 0.003 95 / 0.25)",
+				"purpose": "Dropdowns and floating menus that leave the page flow."
+			}
+		],
+		"motion": [
+			{
+				"name": "state-fast",
+				"value": "100ms cubic-bezier(0.25, 1, 0.5, 1)",
+				"purpose": "Fast fade, zoom, and state changes."
+			},
+			{
+				"name": "state-standard",
+				"value": "180ms cubic-bezier(0.25, 1, 0.5, 1)",
+				"purpose": "Default interaction transition for hover and focus."
+			}
+		],
+		"breakpoints": [
+			{
+				"name": "sm",
+				"value": "640px"
+			},
+			{
+				"name": "md",
+				"value": "768px"
+			},
+			{
+				"name": "lg",
+				"value": "1024px"
+			}
+		]
+	},
+	"components": [
+		{
+			"name": "Primary Button",
+			"kind": "button",
+			"refersTo": "button-primary",
+			"description": "Use for the next safe money action or primary login action.",
+			"html": "<button class=\"ds-btn-primary\">Login na</button>",
+			"css": ".ds-btn-primary { min-height: 48px; padding: 0 16px; border: 1px solid transparent; border-radius: 999px; background: var(--color-primary, oklch(0.205 0 0)); color: var(--color-primary-foreground, oklch(0.985 0 0)); font: 500 14px/1 'Figtree Variable', sans-serif; transition: background-color 180ms cubic-bezier(0.25, 1, 0.5, 1), transform 180ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-btn-primary:hover { background: oklch(0.205 0 0 / 0.8); } .ds-btn-primary:focus-visible { outline: none; border-color: var(--color-ring, oklch(0.708 0 0)); box-shadow: 0 0 0 3px oklch(0.708 0 0 / 0.5); } .ds-btn-primary:active { transform: translateY(1px); }"
+		},
+		{
+			"name": "Outline Button",
+			"kind": "button",
+			"refersTo": "button-outline",
+			"description": "Use for secondary choices that must remain visible without competing.",
+			"html": "<button class=\"ds-btn-outline\">Cancel</button>",
+			"css": ".ds-btn-outline { min-height: 36px; padding: 0 12px; border: 1px solid var(--color-border, oklch(0.922 0 0)); border-radius: 999px; background: oklch(0.922 0 0 / 0.3); color: var(--color-foreground, oklch(0.145 0 0)); font: 500 14px/1 'Figtree Variable', sans-serif; transition: background-color 180ms cubic-bezier(0.25, 1, 0.5, 1), color 180ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-btn-outline:hover { background: oklch(0.922 0 0 / 0.5); } .ds-btn-outline:focus-visible { outline: none; border-color: var(--color-ring, oklch(0.708 0 0)); box-shadow: 0 0 0 3px oklch(0.708 0 0 / 0.5); }"
+		},
+		{
+			"name": "Mobile Input",
+			"kind": "input",
+			"refersTo": "input-default",
+			"description": "Use for login, amount entry, reference numbers, and reconciliation values.",
+			"html": "<label class=\"ds-field\"><span class=\"ds-label\">Amount</span><input class=\"ds-input\" placeholder=\"0.00\" /></label>",
+			"css": ".ds-field { display: grid; gap: 8px; color: var(--color-foreground, oklch(0.145 0 0)); font-family: 'Figtree Variable', sans-serif; } .ds-label { font-size: 14px; line-height: 1; font-weight: 500; } .ds-input { width: 100%; min-height: 48px; border: 1px solid var(--color-input, oklch(0.922 0 0)); border-radius: 999px; background: oklch(0.922 0 0 / 0.3); color: var(--color-foreground, oklch(0.145 0 0)); padding: 4px 12px; font: 400 16px/1.5 'Figtree Variable', sans-serif; transition: border-color 180ms cubic-bezier(0.25, 1, 0.5, 1), box-shadow 180ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-input::placeholder { color: var(--color-muted-foreground, oklch(0.556 0 0)); } .ds-input:focus-visible { outline: none; border-color: var(--color-ring, oklch(0.708 0 0)); box-shadow: 0 0 0 3px oklch(0.708 0 0 / 0.5); }"
+		},
+		{
+			"name": "Task Card",
+			"kind": "card",
+			"refersTo": "card-default",
+			"description": "Use for a single current task such as login or transaction confirmation.",
+			"html": "<section class=\"ds-card\"><div class=\"ds-card-header\"><h2>Pasok sa account</h2><p>Mobile number at PIN lang.</p></div><div class=\"ds-card-body\">...</div></section>",
+			"css": ".ds-card { display: flex; flex-direction: column; gap: 24px; overflow: hidden; border-radius: 18px; background: var(--color-card, oklch(1 0 0)); color: var(--color-card-foreground, oklch(0.145 0 0)); padding: 24px 0; box-shadow: 0 0 0 1px oklch(0.145 0.003 95 / 0.1); font-family: 'Figtree Variable', sans-serif; } .ds-card-header { display: grid; gap: 8px; padding: 0 24px; } .ds-card-header h2 { margin: 0; font-size: 20px; line-height: 1.3; font-weight: 500; } .ds-card-header p { margin: 0; color: var(--color-muted-foreground, oklch(0.556 0 0)); font-size: 14px; line-height: 1.5; } .ds-card-body { padding: 0 24px; }"
+		},
+		{
+			"name": "Segmented Tabs",
+			"kind": "nav",
+			"refersTo": "tabs-default",
+			"description": "Use for a small set of peer modes, never for dense operator navigation.",
+			"html": "<div class=\"ds-tabs\"><button class=\"ds-tab ds-tab-active\">Cash In</button><button class=\"ds-tab\">Cash Out</button></div>",
+			"css": ".ds-tabs { display: inline-flex; align-items: center; justify-content: center; gap: 0; min-height: 36px; padding: 3px; border-radius: 999px; background: var(--color-muted, oklch(0.97 0 0)); color: var(--color-muted-foreground, oklch(0.556 0 0)); font-family: 'Figtree Variable', sans-serif; } .ds-tab { min-height: 29px; padding: 4px 8px; border: 1px solid transparent; border-radius: 14px; background: transparent; color: oklch(0.145 0 0 / 0.6); font: 500 14px/1 'Figtree Variable', sans-serif; transition: color 180ms cubic-bezier(0.25, 1, 0.5, 1), background-color 180ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-tab:hover { color: var(--color-foreground, oklch(0.145 0 0)); } .ds-tab:focus-visible { outline: none; border-color: var(--color-ring, oklch(0.708 0 0)); box-shadow: 0 0 0 3px oklch(0.708 0 0 / 0.5); } .ds-tab-active { background: var(--color-background, oklch(1 0 0)); color: var(--color-foreground, oklch(0.145 0 0)); }"
+		},
+		{
+			"name": "Select Item",
+			"kind": "custom",
+			"refersTo": "select-item",
+			"description": "Use inside dropdowns for compact, familiar choices.",
+			"html": "<div class=\"ds-select-item\"><span>Cash In</span><svg class=\"ds-select-check\" viewBox=\"0 0 24 24\" aria-hidden=\"true\"><path d=\"M20 6 9 17l-5-5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" /></svg></div>",
+			"css": ".ds-select-item { position: relative; display: flex; width: 100%; align-items: center; gap: 10px; min-height: 36px; border-radius: 14px; padding: 8px 32px 8px 12px; color: var(--color-popover-foreground, oklch(0.145 0 0)); font: 400 14px/1.4 'Figtree Variable', sans-serif; outline: none; user-select: none; transition: background-color 100ms cubic-bezier(0.25, 1, 0.5, 1), color 100ms cubic-bezier(0.25, 1, 0.5, 1); } .ds-select-item:hover, .ds-select-item:focus-visible { background: var(--color-accent, oklch(0.97 0 0)); color: var(--color-accent-foreground, oklch(0.205 0 0)); } .ds-select-check { position: absolute; right: 8px; width: 14px; height: 14px; }"
+		}
+	],
+	"narrative": {
+		"northStar": "The Store Ledger",
+		"overview": "Ganansya should feel like the clean page of a trusted tindahan ledger: direct, familiar, and calm enough to use while a customer is waiting. A tindera uses Ganansya on a budget Android phone at a bright sari-sari store counter, so the default theme is light, high-contrast, and quiet.\n\nThe visual system is neutral-first and task-first. It uses Figtree, rounded controls, clear borders, and generous tap areas to make money operations feel stable. The current codebase is built from shadcn-svelte primitives with Tailwind CSS tokens, Hugeicons, and low-motion state transitions.\n\nThis system rejects cluttered pages, complex banking-app patterns, flashy fintech styling, dense dashboards, crypto-wallet energy, and overloaded POS screens. Minimalism is allowed only when the current task remains complete.",
+		"keyCharacteristics": [
+			"Mobile-first product UI for store operators before owner/admin density.",
+			"Restrained color strategy: neutral surfaces, blackened action ink, and reserved danger.",
+			"Large rounded controls that feel forgiving on small phones.",
+			"Flat tonal layers at rest, with overlays lifted only when hierarchy requires it.",
+			"Taglish-ready copy that keeps labels short and operational."
+		],
+		"rules": [
+			{
+				"name": "The Money First Rule",
+				"body": "The strongest contrast belongs to amounts, confirmations, and the next safe action.",
+				"section": "colors"
+			},
+			{
+				"name": "The Reserved Red Rule",
+				"body": "Red is for risk: wrong PIN, invalid amount, failed confirmation, or destructive action. Never use it for decoration.",
+				"section": "colors"
+			},
+			{
+				"name": "The No Literal Extremes Rule",
+				"body": "New work must use OKLCH tokens and must not introduce literal `#000` or `#fff` values.",
+				"section": "colors"
+			},
+			{
+				"name": "The Plain Number Rule",
+				"body": "Amounts must be larger, darker, or better positioned than nearby explanatory text. Do not hide money inside small captions.",
+				"section": "typography"
+			},
+			{
+				"name": "The No Display Labels Rule",
+				"body": "Buttons, form labels, and data labels use the product scale, not display typography.",
+				"section": "typography"
+			},
+			{
+				"name": "The Flat Counter Rule",
+				"body": "The default screen should feel like a clean counter surface. Lift only the element that is temporarily above the task.",
+				"section": "elevation"
+			}
+		],
+		"dos": [
+			"Do prioritize tindera mobile screens before owner/admin density.",
+			"Do keep tap targets at 48px for primary mobile actions.",
+			"Do use Action Ink for the next clear action and Risk Red only for real risk.",
+			"Do keep pages minimal while still completing the full workflow.",
+			"Do use Taglish labels that can be understood without training-heavy explanation.",
+			"Do keep overlays, selects, and dialogs visually familiar so the tool disappears into the store task."
+		],
+		"donts": [
+			"Don't create a cluttered app with too many elements competing on one page.",
+			"Don't use complex banking-app patterns, flashy fintech styling, dense dashboards, crypto-wallet energy, or overloaded POS screens.",
+			"Don't use border-left or border-right greater than 1px as a colored accent.",
+			"Don't use gradient text, decorative glassmorphism, or hero-metric layouts.",
+			"Don't put cards inside cards.",
+			"Don't use heavy color or full-saturation accents on inactive states.",
+			"Don't use a modal as the first answer when inline confirmation or progressive reveal can solve the workflow."
+		]
+	}
+}

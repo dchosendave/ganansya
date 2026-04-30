@@ -1,6 +1,8 @@
 <script lang="ts">
 	import LoginForm, { type LoginPayload } from '$lib/components/auth/LoginForm.svelte';
 
+	const quickChecks = ['Cash', 'GCash', 'Kita'];
+
 	let notice = $state('');
 
 	function handleLogin(payload: LoginPayload) {
@@ -10,35 +12,49 @@
 
 <svelte:head>
 	<title>Login | Ganansya</title>
-	<meta name="description" content="Ganansya store login." />
+	<meta name="description" content="Ganansya tindahan login for store operators." />
 </svelte:head>
 
-<main class="min-h-svh bg-background px-4 py-6 text-foreground">
-	<section class="mx-auto flex min-h-[calc(100svh-3rem)] w-full max-w-sm flex-col justify-center gap-6">
-		<div class="space-y-4 text-center">
-			<div class="mx-auto grid size-14 place-items-center rounded-4xl border bg-card text-2xl font-semibold shadow-sm">
+<main class="min-h-svh bg-background px-4 py-5 text-foreground sm:py-8">
+	<section
+		class="mx-auto flex min-h-[calc(100svh-2.5rem)] w-full max-w-sm flex-col justify-center gap-5 sm:min-h-[calc(100svh-4rem)]"
+		aria-labelledby="login-title"
+	>
+		<div class="space-y-5 text-center">
+			<div
+				class="mx-auto grid size-16 place-items-center rounded-4xl border bg-card text-3xl font-semibold shadow-sm"
+				aria-hidden="true"
+			>
 				G
 			</div>
 
-			<div class="space-y-2">
-				<p class="text-sm font-medium text-muted-foreground">Ganansya</p>
-				<h1 class="text-3xl font-semibold tracking-normal">Ready na ba ang tindahan?</h1>
-				<p class="mx-auto max-w-[18rem] text-sm leading-6 text-muted-foreground">
-					Login muna para ma-check ang cash, GCash, at kita today.
+			<div class="space-y-2.5">
+				<p class="text-sm font-semibold text-muted-foreground">Ganansya</p>
+				<h1 id="login-title" class="text-3xl leading-tight font-semibold tracking-normal">
+					Ready na ang tindahan
+				</h1>
+				<p class="mx-auto max-w-[19rem] text-base leading-6 text-muted-foreground">
+					Pasok muna para makita ang cash, GCash, at kita today.
 				</p>
 			</div>
 		</div>
 
-		<div class="grid grid-cols-3 gap-2 text-center text-xs font-medium text-muted-foreground">
-			<div class="rounded-lg border bg-muted/40 px-3 py-2">Cash In</div>
-			<div class="rounded-lg border bg-muted/40 px-3 py-2">Cash Out</div>
-			<div class="rounded-lg border bg-muted/40 px-3 py-2">Kita</div>
-		</div>
+		<ul
+			class="grid grid-cols-3 gap-2 text-center text-sm font-semibold text-muted-foreground"
+			aria-label="Quick checks after login"
+		>
+			{#each quickChecks as quickCheck (quickCheck)}
+				<li class="rounded-xl border bg-muted/40 px-3 py-2.5">{quickCheck}</li>
+			{/each}
+		</ul>
 
 		<LoginForm onSubmit={handleLogin} />
 
 		{#if notice}
-			<p class="rounded-lg border bg-muted/40 px-3 py-2 text-center text-sm font-medium text-muted-foreground" role="status">
+			<p
+				class="rounded-xl border bg-muted/40 px-3 py-2.5 text-center text-sm font-medium text-muted-foreground"
+				role="status"
+			>
 				{notice}
 			</p>
 		{/if}
