@@ -24,3 +24,5 @@ vite.config.ts.timestamp-*
 
 # dev database
 *.db
+
+.playwright-cli

@@ -31,5 +31,3 @@ The current Git history contains only an initial informal commit, so there is no
 ## Security & Configuration Tips
 
 Do not commit secrets, local environment files, or generated build output. Keep dependency changes reflected in both `package.json` and `package-lock.json`.
-
-Do not directly modify, create, delete files without explicit permission. Always generate codes in the chat with the file name included. If explicitly asked to do the modify/create/deletion of files, that's when you're allowed.
