@@ -4,7 +4,7 @@ import { DATABASE_URL, DATABASE_AUTH_TOKEN, AUTH_JWT_SECRET } from '$env/static/
 
 /** @param {string | undefined} value */
 /** @param {string} name */
-function getRequiredEnv(value, name) {
+function getRequiredEnv(value: string | undefined, name: string) {
 	if (!value?.trim()) {
 		throw new Error(`Missing required environment variable: ${name}`);
 	}
@@ -12,7 +12,7 @@ function getRequiredEnv(value, name) {
 }
 
 /** @param {string} value */
-function normalizeDatabaseUrl(value) {
+function normalizeDatabaseUrl(value: string) {
 	if (!value.startsWith('file:') || value.startsWith('file://')) {
 		return value;
 	}
